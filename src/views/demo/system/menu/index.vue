@@ -30,7 +30,7 @@
   import { defineComponent, nextTick } from 'vue';
 
   import { BasicTable, useTable, TableAction } from '/@/components/Table';
-  import { getMenuList } from '/@/api/sys/menu';
+  import { getMenuList, delMenu } from '/@/api/sys/menu';
 
   import { useDrawer } from '/@/components/Drawer';
   import MenuDrawer from './MenuDrawer.vue';
@@ -42,7 +42,7 @@
     components: { BasicTable, MenuDrawer, TableAction },
     setup() {
       const [registerDrawer, { openDrawer }] = useDrawer();
-      const [registerTable, { reload, collapseAll }] = useTable({
+      const [registerTable, { reload, expandAll }] = useTable({
         title: '菜单列表',
         api: getMenuList,
         columns,
@@ -82,7 +82,9 @@
       }
 
       function handleDelete(record: Recordable) {
-        console.log(record);
+        delMenu(record.id).then(() => {
+          reload();
+        });
       }
 
       function handleSuccess() {
@@ -90,7 +92,7 @@
       }
 
       function onFetchSuccess() {
-        nextTick(collapseAll);
+        nextTick(expandAll);
       }
 
       return {

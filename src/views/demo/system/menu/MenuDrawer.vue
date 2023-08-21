@@ -16,7 +16,7 @@
   import { formSchema } from './menu.data';
   import { BasicDrawer, useDrawerInner } from '/@/components/Drawer';
 
-  import { getMenuList, saveMenu, modifyMenu, delMenu } from '/@/api/sys/menu';
+  import { getMenuList, saveMenu, modifyMenu } from '/@/api/sys/menu';
 
   export default defineComponent({
     name: 'MenuDrawer',
@@ -61,6 +61,9 @@
         if (unref(isUpdate)) {
           await modifyMenu(values);
         } else {
+          if (!values.parentId) {
+            values.parentId = 0;
+          }
           await saveMenu(values);
         }
         closeDrawer();
