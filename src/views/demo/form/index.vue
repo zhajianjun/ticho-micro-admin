@@ -66,6 +66,7 @@
   import { useDebounceFn } from '@vueuse/core';
   import { treeOptionsListApi } from '/@/api/demo/tree';
   import { Select } from 'ant-design-vue';
+  import { SHOW_CHILD } from 'ant-design-vue/es/vc-cascader';
   import { cloneDeep } from 'lodash-es';
 
   const valueSelectA = ref<string[]>([]);
@@ -303,6 +304,8 @@
         span: 8,
       },
       componentProps: {
+        multiple: true,
+        showCheckedStrategy: SHOW_CHILD,
         options: [
           {
             value: 'zhejiang',
@@ -337,6 +340,9 @@
             ],
           },
         ],
+      },
+      componentSlots: {
+        displayRender: ({ slotData }) => slotData?.labels?.join(':'),
       },
     },
     {

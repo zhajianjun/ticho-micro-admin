@@ -20,13 +20,22 @@ export const columns: BasicColumn[] = [
     },
   },
   {
-    title: '权限标识',
-    dataIndex: 'perms',
-    width: 180,
+    title: '类型',
+    dataIndex: 'type',
+    width: 100,
+    customRender: ({ record }) => {
+      const textArr = ['目录', '菜单', '按钮'];
+      return record.type ? textArr[record.type - 1] : null;
+    },
   },
   {
     title: '组件',
     dataIndex: 'component',
+  },
+  {
+    title: '权限标识',
+    dataIndex: 'perms',
+    width: 250,
   },
   {
     title: '排序',
