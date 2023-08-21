@@ -21,7 +21,7 @@ export const columns: BasicColumn[] = [
   },
   {
     title: '权限标识',
-    dataIndex: 'permission',
+    dataIndex: 'perms',
     width: 180,
   },
   {
@@ -31,11 +31,6 @@ export const columns: BasicColumn[] = [
   {
     title: '排序',
     dataIndex: 'sort',
-    width: 50,
-  },
-  {
-    title: '类型',
-    dataIndex: 'type',
     width: 50,
   },
   {
@@ -83,6 +78,12 @@ export const searchFormSchema: FormSchema[] = [
 ];
 
 export const formSchema: FormSchema[] = [
+  {
+    field: `id`,
+    component: 'Input',
+    label: `编号`,
+    show: false,
+  },
   {
     field: 'type',
     label: '菜单类型',
@@ -132,7 +133,7 @@ export const formSchema: FormSchema[] = [
   },
 
   {
-    field: 'routePath',
+    field: 'path',
     label: '路由地址',
     component: 'Input',
     required: true,
@@ -145,7 +146,7 @@ export const formSchema: FormSchema[] = [
     ifShow: ({ values }) => isMenu(values.type),
   },
   {
-    field: 'permission',
+    field: 'perms',
     label: '权限标识',
     component: 'Input',
     ifShow: ({ values }) => !isDir(values.type),

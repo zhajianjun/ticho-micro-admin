@@ -16,7 +16,7 @@
   import { formSchema } from './menu.data';
   import { BasicDrawer, useDrawerInner } from '/@/components/Drawer';
 
-  import { getMenuList } from '/@/api/demo/system';
+  import { getMenuList, saveMenu, modifyMenu, delMenu } from '/@/api/sys/menu';
 
   export default defineComponent({
     name: 'MenuDrawer',
@@ -56,16 +56,16 @@
       const getTitle = computed(() => (!unref(isUpdate) ? '新增菜单' : '编辑菜单'));
 
       async function handleSubmit() {
-        try {
-          const values = await validate();
-          setDrawerProps({ confirmLoading: true });
-          // TODO custom api
-          console.log(values);
-          closeDrawer();
-          emit('success');
-        } finally {
-          setDrawerProps({ confirmLoading: false });
+        const values = await validate();
+        setDrawerProps({ confirmLoading: true });
+        if (unref(isUpdate)) {
+          await modifyMenu(values);
+        } else {
+          await saveMenu(values);
         }
+        closeDrawer();
+        emit('success');
+        setDrawerProps({ confirmLoading: false });
       }
 
       return { registerDrawer, registerForm, getTitle, handleSubmit };

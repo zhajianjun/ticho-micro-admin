@@ -1,14 +1,21 @@
 import { defHttp } from '/@/utils/http/axios';
-import { getMenuListResultModel } from './model/menuModel';
+import { MenuDtlDTO } from './model/menuModel';
 
 enum Api {
-  GetMenuList = '/getMenuList',
+  Menu = '/menu',
+  MenuList = '/menu/list',
 }
 
-/**
- * @description: Get user menu based on id
- */
+export const getMenuList = () => defHttp.get<MenuDtlDTO>({ url: Api.MenuList });
 
-export const getMenuList = () => {
-  return defHttp.get<getMenuListResultModel>({ url: Api.GetMenuList });
-};
+export function saveMenu(params: any) {
+  return defHttp.post<MenuDtlDTO>({ url: Api.Menu, params }, { errorMessageMode: 'message' });
+}
+
+export function delMenu(params: string) {
+  return defHttp.delete<any>({ url: Api.Menu + '?id=', params }, { errorMessageMode: 'message' });
+}
+
+export function modifyMenu(params: any) {
+  return defHttp.put<MenuDtlDTO>({ url: Api.Menu, params }, { errorMessageMode: 'message' });
+}
