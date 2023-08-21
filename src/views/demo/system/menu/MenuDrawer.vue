@@ -58,6 +58,9 @@
       async function handleSubmit() {
         const values = await validate();
         setDrawerProps({ confirmLoading: true });
+        if (values.type === 3 && values.perms?.length) {
+          values.perms = values.perms.map((n) => n.join(':')).toString();
+        }
         if (unref(isUpdate)) {
           await modifyMenu(values);
         } else {

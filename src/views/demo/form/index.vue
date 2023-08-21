@@ -341,9 +341,6 @@
           },
         ],
       },
-      componentSlots: {
-        displayRender: ({ slotData }) => slotData?.labels?.join(':'),
-      },
     },
     {
       field: 'divider-api-select',

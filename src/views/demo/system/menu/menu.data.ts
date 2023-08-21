@@ -3,6 +3,7 @@ import { FormSchema } from '/@/components/Table';
 import { h } from 'vue';
 import { Tag } from 'ant-design-vue';
 import { Icon } from '/@/components/Icon';
+import { SHOW_CHILD } from 'ant-design-vue/es/vc-cascader';
 
 export const columns: BasicColumn[] = [
   {
@@ -157,8 +158,51 @@ export const formSchema: FormSchema[] = [
   {
     field: 'perms',
     label: '权限标识',
-    component: 'Input',
+    component: 'Cascader',
     ifShow: ({ values }) => isButton(values.type),
+    componentProps: {
+      multiple: true,
+      showCheckedStrategy: SHOW_CHILD,
+      options: [
+        {
+          value: 'upms',
+          label: 'upms',
+          children: [
+            {
+              value: 'menu',
+              label: 'menu',
+              children: [
+                {
+                  value: 'add',
+                  label: 'add',
+                },
+                {
+                  value: 'del',
+                  label: 'del',
+                },
+              ],
+            },
+          ],
+        },
+        {
+          value: 'storage',
+          label: 'storage',
+          children: [
+            {
+              value: 'bucket',
+              label: 'bucket',
+              children: [
+                {
+                  value: 'add',
+                  label: 'add',
+                },
+              ],
+            },
+          ],
+        },
+      ],
+      handleRenderDisplay: ({ slotData }) => slotData?.labels?.join(':'),
+    },
   },
   {
     field: 'status',
