@@ -40,8 +40,12 @@
         setDrawerProps({ confirmLoading: false });
         isUpdate.value = !!data?.isUpdate;
         if (unref(isUpdate)) {
+          let perms = data.record.perms.map((n: string) => n.split(':'));
+          let icon = data.record.icon ?? '';
           await setFieldsValue({
             ...data.record,
+            icon: icon,
+            perms: perms,
           });
         } else {
           // 创建菜单设置类型默认值
@@ -62,7 +66,7 @@
         const values = await validate();
         setDrawerProps({ confirmLoading: true });
         if (values.type === 3 && values.perms?.length) {
-          values.perms = values.perms.map((n) => n.join(':')).toString();
+          values.perms = values.perms.map((n) => n.join(':'));
         }
         if (unref(isUpdate)) {
           await modifyMenu(values);

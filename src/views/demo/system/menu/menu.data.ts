@@ -1,9 +1,10 @@
 import { BasicColumn } from '/@/components/Table';
 import { FormSchema } from '/@/components/Table';
-import { h } from 'vue';
+import { h, ref } from 'vue';
 import { Tag } from 'ant-design-vue';
 import { Icon } from '/@/components/Icon';
 import { SHOW_CHILD } from 'ant-design-vue/es/vc-cascader';
+import { getPermList } from '/@/api/sys/perm';
 
 export const columns: BasicColumn[] = [
   {
@@ -37,6 +38,10 @@ export const columns: BasicColumn[] = [
     title: '权限标识',
     dataIndex: 'perms',
     width: 250,
+    customRender: ({ record }) => {
+      const perms = record.perms;
+      return perms?.join(',');
+    },
   },
   {
     title: '排序',
@@ -65,6 +70,14 @@ export const columns: BasicColumn[] = [
 // const isDir = (type: number) => type === 1;
 const isMenu = (type: number) => type === 2;
 const isButton = (type: number) => type === 3;
+
+function getPermListProxy() {
+  const permList = ref<Array<any>>([]);
+  getPermList().then((res) => {
+    permList.value = res as unknown as Array<any>;
+  });
+  return permList;
+}
 
 export const formSchema: FormSchema[] = [
   {
@@ -142,45 +155,8 @@ export const formSchema: FormSchema[] = [
     componentProps: {
       multiple: true,
       showCheckedStrategy: SHOW_CHILD,
-      options: [
-        {
-          value: 'upms',
-          label: 'upms',
-          children: [
-            {
-              value: 'menu',
-              label: 'menu',
-              children: [
-                {
-                  value: 'add',
-                  label: 'add',
-                },
-                {
-                  value: 'del',
-                  label: 'del',
-                },
-              ],
-            },
-          ],
-        },
-        {
-          value: 'storage',
-          label: 'storage',
-          children: [
-            {
-              value: 'bucket',
-              label: 'bucket',
-              children: [
-                {
-                  value: 'add',
-                  label: 'add',
-                },
-              ],
-            },
-          ],
-        },
-      ],
-      handleRenderDisplay: ({ slotData }) => slotData?.labels?.join(':'),
+      options: getPermListProxy(),
+      displayRender: ({ labels }) => labels?.join(':'),
     },
   },
   {
