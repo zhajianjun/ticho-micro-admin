@@ -157,6 +157,10 @@ export const formSchema: FormSchema[] = [
       showCheckedStrategy: SHOW_CHILD,
       options: getPermListProxy(),
       displayRender: ({ labels }) => labels?.join(':'),
+      fieldNames: {
+        label: 'name',
+        value: 'code',
+      },
     },
   },
   {
