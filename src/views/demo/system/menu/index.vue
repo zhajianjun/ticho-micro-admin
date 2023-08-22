@@ -23,11 +23,11 @@
         />
       </template>
     </BasicTable>
-    <MenuDrawer @register="registerDrawer" @success="handleSuccess" />
+    <MenuDrawer @register="registerDrawer" :treeData="treeData" @success="handleSuccess" />
   </div>
 </template>
 <script lang="ts">
-  import { defineComponent, nextTick } from 'vue';
+  import { defineComponent, nextTick, ref } from 'vue';
 
   import { BasicTable, useTable, TableAction } from '/@/components/Table';
   import { getMenuList, delMenu } from '/@/api/sys/menu';
@@ -35,26 +35,34 @@
   import { useDrawer } from '/@/components/Drawer';
   import MenuDrawer from './MenuDrawer.vue';
 
-  import { columns, searchFormSchema } from './menu.data';
+  import { columns } from './menu.data';
 
   export default defineComponent({
     name: 'MenuManagement',
     components: { BasicTable, MenuDrawer, TableAction },
     setup() {
+      const treeData = ref([]);
       const [registerDrawer, { openDrawer }] = useDrawer();
       const [registerTable, { reload, expandAll }] = useTable({
         title: '菜单列表',
-        api: getMenuList,
+        api: async () => {
+          const res = await getMenuList();
+          treeData.value = res as any;
+          return {
+            items: res,
+          };
+        },
         columns,
         formConfig: {
-          labelWidth: 120,
-          schemas: searchFormSchema,
+          showActionButtonGroup: false,
         },
         isTreeTable: true,
+        immediate: true,
         pagination: false,
         striped: false,
         useSearchForm: true,
         showTableSetting: true,
+        canColDrag: true,
         bordered: true,
         showIndexColumn: false,
         canResize: false,
@@ -96,6 +104,7 @@
       }
 
       return {
+        treeData,
         registerTable,
         registerDrawer,
         handleCreate,

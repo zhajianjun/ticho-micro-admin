@@ -16,13 +16,16 @@
   import { formSchema } from './menu.data';
   import { BasicDrawer, useDrawerInner } from '/@/components/Drawer';
 
-  import { getMenuList, saveMenu, modifyMenu } from '/@/api/sys/menu';
+  import { saveMenu, modifyMenu } from '/@/api/sys/menu';
 
   export default defineComponent({
     name: 'MenuDrawer',
     components: { BasicDrawer, BasicForm },
+    props: {
+      treeData: Array,
+    },
     emits: ['success', 'register'],
-    setup(_, { emit }) {
+    setup(props, { emit }) {
       const isUpdate = ref(true);
 
       const [registerForm, { resetFields, setFieldsValue, updateSchema, validate }] = useForm({
@@ -46,8 +49,8 @@
             type: 1,
           });
         }
-        const treeData = await getMenuList();
-        updateSchema({
+        const treeData = props.treeData;
+        await updateSchema({
           field: 'parentId',
           componentProps: { treeData },
         });

@@ -66,27 +66,6 @@ export const columns: BasicColumn[] = [
 const isMenu = (type: number) => type === 2;
 const isButton = (type: number) => type === 3;
 
-export const searchFormSchema: FormSchema[] = [
-  {
-    field: 'name',
-    label: '菜单名称',
-    component: 'Input',
-    colProps: { span: 8 },
-  },
-  {
-    field: 'status',
-    label: '状态',
-    component: 'Select',
-    componentProps: {
-      options: [
-        { label: '启用', value: 1 },
-        { label: '停用', value: 0 },
-      ],
-    },
-    colProps: { span: 8 },
-  },
-];
-
 export const formSchema: FormSchema[] = [
   {
     field: `id`,
