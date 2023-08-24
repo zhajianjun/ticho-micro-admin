@@ -35,7 +35,7 @@ export const useUserStore = defineStore({
     token: undefined,
     // roleList
     roleList: [],
-    // Whether the login expired
+    // Whether the login expired 登录是否过期
     sessionTimeout: false,
     // Last fetch time
     lastUpdateTime: 0,

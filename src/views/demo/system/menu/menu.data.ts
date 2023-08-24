@@ -67,7 +67,7 @@ export const columns: BasicColumn[] = [
   },
 ];
 
-// const isDir = (type: number) => type === 1;
+const isDir = (type: number) => type === 1;
 const isMenu = (type: number) => type === 2;
 const isButton = (type: number) => type === 3;
 
@@ -148,6 +148,13 @@ export const formSchema: FormSchema[] = [
     ifShow: ({ values }) => isMenu(values.type),
   },
   {
+    field: 'componentName',
+    label: '组件名称',
+    component: 'Input',
+    required: true,
+    ifShow: ({ values }) => !isDir(values.type),
+  },
+  {
     field: 'perms',
     label: '权限标识',
     component: 'Cascader',
@@ -190,7 +197,7 @@ export const formSchema: FormSchema[] = [
   },
 
   {
-    field: 'cacheAble',
+    field: 'keepAlive',
     label: '是否缓存',
     component: 'RadioButtonGroup',
     defaultValue: 0,

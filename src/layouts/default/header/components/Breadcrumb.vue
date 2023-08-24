@@ -19,7 +19,6 @@
   import type { Menu } from '/@/router/types';
 
   import { defineComponent, ref, watchEffect } from 'vue';
-
   import { Breadcrumb } from 'ant-design-vue';
   import Icon from '/@/components/Icon';
 
@@ -61,7 +60,7 @@
         if (cur && cur?.meta?.currentActiveMenu) {
           path = cur.meta.currentActiveMenu as string;
         }
-
+        // TODO
         const parent = getAllParentPath(menus, path);
         const filterMenus = menus.filter((item) => item.path === parent[0]);
         const matched = getMatched(filterMenus, parent) as any;
@@ -110,6 +109,7 @@
       }
 
       function handleClick(route: RouteLocationMatched, paths: string[], e: Event) {
+        console.log('click', route);
         e?.preventDefault();
         const { children, redirect, meta } = route;
 

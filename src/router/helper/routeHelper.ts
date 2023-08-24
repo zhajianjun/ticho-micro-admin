@@ -1,10 +1,10 @@
 import type { AppRouteModule, AppRouteRecordRaw } from '/@/router/types';
 import type { Router, RouteRecordNormalized } from 'vue-router';
+import { createRouter, createWebHashHistory } from 'vue-router';
 
-import { getParentLayout, LAYOUT, EXCEPTION_COMPONENT } from '/@/router/constant';
+import { EXCEPTION_COMPONENT, getParentLayout, LAYOUT } from '/@/router/constant';
 import { cloneDeep, omit } from 'lodash-es';
 import { warn } from '/@/utils/log';
-import { createRouter, createWebHashHistory } from 'vue-router';
 
 export type LayoutMapKey = 'LAYOUT';
 const IFRAME = () => import('/@/views/sys/iframe/FrameBlank.vue');
@@ -15,6 +15,32 @@ LayoutMap.set('LAYOUT', LAYOUT);
 LayoutMap.set('IFRAME', IFRAME);
 
 let dynamicViewsModules: Record<string, () => Promise<Recordable>>;
+
+// Turn background objects into routing objects 将后端接口数据对象转换为路由对象
+export function transformObjToRoute<T = AppRouteModule>(routeList: AppRouteModule[]): T[] {
+  routeList.forEach((route) => {
+    const component = route.component as string;
+    if (component) {
+      // 如果component='LAYOUT', 从LayoutMap获取Layout组件赋予到component上
+      if (component.toUpperCase() === 'LAYOUT') {
+        route.component = LayoutMap.get(component.toUpperCase());
+      } else {
+        route.children = [cloneDeep(route)];
+        route.component = LAYOUT;
+        route.name = `${route.name}Parent`;
+        route.path = '';
+        const meta = route.meta || {};
+        meta.single = true;
+        meta.affix = false;
+        route.meta = meta;
+      }
+    } else {
+      warn('请正确配置路由：' + route?.name + '的component属性');
+    }
+    route.children && asyncImportRoute(route.children);
+  });
+  return routeList as unknown as T[];
+}
 
 // Dynamic introduction
 function asyncImportRoute(routes: AppRouteRecordRaw[] | undefined) {
@@ -67,31 +93,6 @@ function dynamicImport(
   }
 }
 
-// Turn background objects into routing objects
-export function transformObjToRoute<T = AppRouteModule>(routeList: AppRouteModule[]): T[] {
-  routeList.forEach((route) => {
-    const component = route.component as string;
-    if (component) {
-      if (component.toUpperCase() === 'LAYOUT') {
-        route.component = LayoutMap.get(component.toUpperCase());
-      } else {
-        route.children = [cloneDeep(route)];
-        route.component = LAYOUT;
-        route.name = `${route.name}Parent`;
-        route.path = '';
-        const meta = route.meta || {};
-        meta.single = true;
-        meta.affix = false;
-        route.meta = meta;
-      }
-    } else {
-      warn('请正确配置路由：' + route?.name + '的component属性');
-    }
-    route.children && asyncImportRoute(route.children);
-  });
-  return routeList as unknown as T[];
-}
-
 /**
  * Convert multi-level routing to level 2 routing
  */
@@ -122,7 +123,7 @@ function promoteRouteLevel(routeModule: AppRouteModule) {
   routeModule.children = routeModule.children?.map((item) => omit(item, 'children'));
 }
 
-// Add all sub-routes to the secondary route
+// Add all sub-routes to the secondary route 将所有子路由添加到辅助路由
 function addToChildren(
   routes: RouteRecordNormalized[],
   children: AppRouteRecordRaw[],
@@ -144,7 +145,7 @@ function addToChildren(
   }
 }
 
-// Determine whether the level exceeds 2 levels
+// Determine whether the level exceeds 2 levels 确定级别是否超过2个级别
 function isMultipleRoute(routeModule: AppRouteModule) {
   if (!routeModule || !Reflect.has(routeModule, 'children') || !routeModule.children?.length) {
     return false;

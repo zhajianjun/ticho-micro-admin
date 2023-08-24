@@ -1,4 +1,11 @@
 import type { RouteMeta } from 'vue-router';
+import { defineComponent } from 'vue';
+
+export type Component<T = any> =
+  | ReturnType<typeof defineComponent>
+  | (() => Promise<typeof import('*.vue')>)
+  | (() => Promise<T>);
+
 export interface RouteItem {
   path: string;
   component: any;
@@ -9,11 +16,6 @@ export interface RouteItem {
   caseSensitive?: boolean;
   children?: RouteItem[];
 }
-
-/**
- * @description: Get menu return value
- */
-export type getMenuListResultModel = RouteItem[];
 
 export interface MenuDtlDTO {
   /** 菜单id */
@@ -28,14 +30,16 @@ export interface MenuDtlDTO {
   name: string;
   /** 路由地址 */
   path: string;
+  /** 组件 */
+  component: Component | string;
   /** 组件名称 */
-  component: string;
+  componentName: string;
   /** 转发地址 */
   redirect: string;
   /** 是否外链菜单;1-是,0-否 */
   extFlag: number;
   /** 是否缓存;1-是,0-否 */
-  cacheAble: number;
+  keepAlive: number;
   /** 菜单和目录是否可见;1-是,0-否 */
   invisible: number;
   /** 菜单是否可关闭;1-是,0-否 */
@@ -50,4 +54,8 @@ export interface MenuDtlDTO {
   remark: string;
   /** 是否选中;true-选中,false-未选中 */
   checkbox: number;
+  /** 子级 */
+  children: MenuDtlDTO[];
 }
+
+export type MenuDtlModule = MenuDtlDTO[];

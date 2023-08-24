@@ -18,8 +18,7 @@ import { ERROR_LOG_ROUTE, PAGE_NOT_FOUND_ROUTE } from '/@/router/routes/basic';
 
 import { filter } from '/@/utils/helper/treeHelper';
 
-import { getMenuList } from '/@/api/sys/menu';
-import { getPermCode } from '/@/api/sys/user';
+import { getRoutes } from '/@/api/sys/menu';
 
 import { useMessage } from '/@/hooks/web/useMessage';
 import { PageEnum } from '/@/enums/pageEnum';
@@ -27,7 +26,7 @@ import { PageEnum } from '/@/enums/pageEnum';
 interface PermissionState {
   // Permission code list
   permCodeList: string[] | number[];
-  // Whether the route has been dynamically added
+  // Whether the route has been dynamically added 路由是否已动态添加
   isDynamicAddedRoute: boolean;
   // To trigger a menu update
   lastBuildMenuTime: number;
@@ -93,7 +92,8 @@ export const usePermissionStore = defineStore({
       this.lastBuildMenuTime = 0;
     },
     async changePermissionCode() {
-      const codeList = await getPermCode();
+      // const codeList = await getPermCode();
+      const codeList = [];
       this.setPermCodeList(codeList);
     },
     async buildRoutesAction(): Promise<AppRouteRecordRaw[]> {
@@ -180,12 +180,12 @@ export const usePermissionStore = defineStore({
             duration: 1,
           });
 
-          // !Simulate to obtain permission codes from the background,
+          // 模拟从后台获取菜单
           // this function may only need to be executed once, and the actual project can be put at the right time by itself
           let routeList: AppRouteRecordRaw[] = [];
           try {
             this.changePermissionCode();
-            routeList = (await getMenuList()) as AppRouteRecordRaw[];
+            routeList = (await getRoutes()) as unknown as AppRouteRecordRaw[];
           } catch (error) {
             console.error(error);
           }
