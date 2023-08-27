@@ -48,17 +48,41 @@
             perms: perms,
           });
         } else {
+          let parentId = data.record.id;
+          let parentType = data.record.type;
+          let type = parentType === 2 ? 3 : 1;
+          if (parentType === 3) {
+            parentId = data.record.parentId;
+            type = 3;
+          }
           // 创建菜单设置类型默认值
           await setFieldsValue({
-            type: 1,
+            parentId: parentId,
+            type: type,
           });
         }
-        const treeData = props.treeData;
+        // 过滤按钮类型的菜单
+        const treeData = filterData(props.treeData);
         await updateSchema({
           field: 'parentId',
           componentProps: { treeData },
         });
       });
+
+      /**
+       * 过滤按钮type=3的数据
+       */
+      function filterData(data) {
+        return data.filter((item) => {
+          if (item.type === 3) {
+            return false;
+          }
+          if (item.children) {
+            item.children = filterData(item.children);
+          }
+          return true;
+        });
+      }
 
       const getTitle = computed(() => (!unref(isUpdate) ? '新增菜单' : '编辑菜单'));
 

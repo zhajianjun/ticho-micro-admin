@@ -31,7 +31,17 @@ export const columns: BasicColumn[] = [
     },
   },
   {
-    title: '组件',
+    title: '组件名称',
+    width: 200,
+    dataIndex: 'componentName',
+  },
+  {
+    title: '组件路由',
+    width: 280,
+    dataIndex: 'path',
+  },
+  {
+    title: '组件路径',
     dataIndex: 'component',
   },
   {
@@ -117,6 +127,12 @@ export const formSchema: FormSchema[] = [
         value: 'id',
       },
       getPopupContainer: () => document.body,
+      /* 展示搜索 */
+      showSearch: true,
+      /* 搜索逻辑 */
+      filterTreeNode: (inputValue: string, treeNode: any) => {
+        return treeNode.name.indexOf(inputValue) > -1;
+      },
     },
   },
 

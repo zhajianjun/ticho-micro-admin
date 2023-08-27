@@ -8,6 +8,12 @@
         <TableAction
           :actions="[
             {
+              icon: 'ant-design:file-add-outlined',
+              type: 'link',
+              color: 'warning',
+              onClick: handleCreate.bind(null, record),
+            },
+            {
               icon: 'clarity:note-edit-line',
               onClick: handleEdit.bind(null, record),
             },
@@ -29,13 +35,14 @@
 <script lang="ts">
   import { defineComponent, nextTick, ref } from 'vue';
 
-  import { BasicTable, useTable, TableAction } from '/@/components/Table';
-  import { getMenuList, delMenu } from '/@/api/sys/menu';
+  import { BasicTable, TableAction, useTable } from '/@/components/Table';
+  import { delMenu, getMenuList } from '/@/api/sys/menu';
 
   import { useDrawer } from '/@/components/Drawer';
   import MenuDrawer from './MenuDrawer.vue';
 
   import { columns } from './menu.data';
+  import { cloneDeep } from 'lodash-es';
 
   export default defineComponent({
     name: 'MenuManagement',
@@ -47,7 +54,7 @@
         title: '菜单列表',
         api: async () => {
           const res = await getMenuList();
-          treeData.value = res as any;
+          treeData.value = cloneDeep(res) as any;
           return {
             items: res,
           };
@@ -59,7 +66,7 @@
         isTreeTable: true,
         immediate: true,
         pagination: false,
-        striped: false,
+        striped: true,
         useSearchForm: true,
         showTableSetting: true,
         canColDrag: true,
@@ -67,17 +74,23 @@
         showIndexColumn: false,
         canResize: false,
         actionColumn: {
-          width: 80,
+          width: 120,
           title: '操作',
           dataIndex: 'action',
           slots: { customRender: 'action' },
           fixed: undefined,
         },
+        rowKey: 'id',
+        // rowSelection: {
+        //   type: 'radio',
+        //   onSelect: onSelect,
+        //   onSelectAll: onSelectAll,
+        // },
       });
 
-      function handleCreate() {
+      function handleCreate(record: Recordable) {
         openDrawer(true, {
-          parentId: 0,
+          record,
           isUpdate: false,
         });
       }
