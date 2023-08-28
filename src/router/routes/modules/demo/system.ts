@@ -7,7 +7,7 @@ const system: AppRouteModule = {
   path: '/system',
   name: 'System',
   component: LAYOUT,
-  redirect: '/system/account',
+  redirect: '/system/user',
   meta: {
     orderNo: 2000,
     icon: 'ion:settings-outline',
@@ -15,25 +15,25 @@ const system: AppRouteModule = {
   },
   children: [
     {
-      path: 'account',
-      name: 'AccountManagement',
+      path: 'user',
+      name: 'UserManagement',
       meta: {
-        title: t('routes.demo.system.account'),
+        title: t('routes.demo.system.user'),
         ignoreKeepAlive: false,
       },
-      component: () => import('/@/views/demo/system/account/index.vue'),
+      component: () => import('/@/views/demo/system/user/index.vue'),
     },
     {
-      path: 'account_detail/:id',
-      name: 'AccountDetail',
+      path: 'user_detail/:id',
+      name: 'UserDetail',
       meta: {
         hideMenu: true,
-        title: t('routes.demo.system.account_detail'),
+        title: t('routes.demo.system.user_detail'),
         ignoreKeepAlive: true,
         showMenu: false,
         currentActiveMenu: '/system/account',
       },
-      component: () => import('/@/views/demo/system/account/AccountDetail.vue'),
+      component: () => import('/@/views/demo/system/user/UserDetail.vue'),
     },
     {
       path: 'role',

@@ -31,33 +31,30 @@
         />
       </template>
     </BasicTable>
-    <AccountModal @register="registerModal" @success="handleSuccess" />
+    <UserModel @register="registerModal" @success="handleSuccess" />
   </PageWrapper>
 </template>
 <script lang="ts">
   import { defineComponent, reactive } from 'vue';
-
   import { BasicTable, useTable, TableAction } from '/@/components/Table';
-  import { getAccountList } from '/@/api/demo/system';
+  import { userPage } from '/@/api/sys/user';
   import { PageWrapper } from '/@/components/Page';
   import DeptTree from './DeptTree.vue';
-
   import { useModal } from '/@/components/Modal';
-  import AccountModal from './AccountModal.vue';
-
-  import { columns, searchFormSchema } from './account.data';
+  import UserModel from './UserModal.vue';
+  import { columns, searchFormSchema } from './user.data';
   import { useGo } from '/@/hooks/web/usePage';
 
   export default defineComponent({
     name: 'AccountManagement',
-    components: { BasicTable, PageWrapper, DeptTree, AccountModal, TableAction },
+    components: { BasicTable, PageWrapper, DeptTree, UserModel, TableAction },
     setup() {
       const go = useGo();
       const [registerModal, { openModal }] = useModal();
       const searchInfo = reactive<Recordable>({});
       const [registerTable, { reload, updateTableDataRecord }] = useTable({
-        title: '账号列表',
-        api: getAccountList,
+        title: '用户列表',
+        api: userPage,
         rowKey: 'id',
         columns,
         formConfig: {
@@ -67,6 +64,8 @@
         },
         useSearchForm: true,
         showTableSetting: true,
+        canResize: true,
+        showIndexColumn: false,
         bordered: true,
         handleSearchInfoFn(info) {
           console.log('handleSearchInfoFn', info);
@@ -115,7 +114,7 @@
       }
 
       function handleView(record: Recordable) {
-        go('/system/account_detail/' + record.id);
+        go('/system/user_detail/' + record.id);
       }
 
       return {

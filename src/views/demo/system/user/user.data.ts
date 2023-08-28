@@ -1,16 +1,26 @@
-import { getAllRoleList, isAccountExist } from '/@/api/demo/system';
+// import { getAllRoleList, isAccountExist } from '/@/api/demo/system';
 import { BasicColumn } from '/@/components/Table';
 import { FormSchema } from '/@/components/Table';
 
 export const columns: BasicColumn[] = [
   {
     title: '用户名',
-    dataIndex: 'account',
+    dataIndex: 'username',
     width: 120,
   },
   {
     title: '昵称',
     dataIndex: 'nickname',
+    width: 120,
+  },
+  {
+    title: '真实姓名',
+    dataIndex: 'realname',
+    width: 120,
+  },
+  {
+    title: '手机号',
+    dataIndex: 'mobile',
     width: 120,
   },
   {
@@ -36,22 +46,28 @@ export const columns: BasicColumn[] = [
 
 export const searchFormSchema: FormSchema[] = [
   {
-    field: 'account',
+    field: 'username',
     label: '用户名',
     component: 'Input',
     colProps: { span: 8 },
   },
   {
-    field: 'nickname',
-    label: '昵称',
+    field: 'mobile',
+    label: '手机号',
+    component: 'Input',
+    colProps: { span: 8 },
+  },
+  {
+    field: 'email',
+    label: '邮箱',
     component: 'Input',
     colProps: { span: 8 },
   },
 ];
 
-export const accountFormSchema: FormSchema[] = [
+export const userFormSchema: FormSchema[] = [
   {
-    field: 'account',
+    field: 'username',
     label: '用户名',
     component: 'Input',
     helpMessage: ['本字段演示异步验证', '不能输入带有admin的用户名'],
@@ -60,37 +76,37 @@ export const accountFormSchema: FormSchema[] = [
         required: true,
         message: '请输入用户名',
       },
-      {
-        validator(_, value) {
-          return new Promise((resolve, reject) => {
-            isAccountExist(value)
-              .then(() => resolve())
-              .catch((err) => {
-                reject(err.message || '验证失败');
-              });
-          });
-        },
-      },
+      // {
+      //   validator(_, value) {
+      //     return new Promise((resolve, reject) => {
+      //       isAccountExist(value)
+      //         .then(() => resolve())
+      //         .catch((err) => {
+      //           reject(err.message || '验证失败');
+      //         });
+      //     });
+      //   },
+      // },
     ],
   },
   {
-    field: 'pwd',
+    field: 'password',
     label: '密码',
     component: 'InputPassword',
     required: true,
     ifShow: false,
   },
-  {
-    label: '角色',
-    field: 'role',
-    component: 'ApiSelect',
-    componentProps: {
-      api: getAllRoleList,
-      labelField: 'roleName',
-      valueField: 'roleValue',
-    },
-    required: true,
-  },
+  // {
+  //   label: '角色',
+  //   field: 'role',
+  //   component: 'ApiSelect',
+  //   componentProps: {
+  //     api: getAllRoleList,
+  //     labelField: 'roleName',
+  //     valueField: 'roleValue',
+  //   },
+  //   required: true,
+  // },
   {
     field: 'dept',
     label: '所属部门',

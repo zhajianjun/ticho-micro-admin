@@ -169,8 +169,8 @@ export default {
   system: {
     moduleName: 'System management',
 
-    account: 'Account management',
-    account_detail: 'Account detail',
+    user: 'Account management',
+    user_detail: 'Account detail',
     password: 'Change password',
 
     dept: 'Department management',

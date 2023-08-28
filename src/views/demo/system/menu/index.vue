@@ -56,7 +56,7 @@
           const res = await getMenuList();
           treeData.value = cloneDeep(res) as any;
           return {
-            items: res,
+            rows: res,
           };
         },
         columns,
@@ -72,7 +72,7 @@
         canColDrag: true,
         bordered: true,
         showIndexColumn: false,
-        canResize: false,
+        canResize: true,
         actionColumn: {
           width: 120,
           title: '操作',

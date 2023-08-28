@@ -150,17 +150,17 @@ const sysRoute = {
       path: 'account',
       name: 'AccountManagement',
       meta: {
-        title: 'routes.demo.system.account',
+        title: 'routes.demo.system.user',
         ignoreKeepAlive: true,
       },
       component: '/demo/system/account/index',
     },
     {
-      path: 'account_detail/:id',
+      path: 'user_detail/:id',
       name: 'AccountDetail',
       meta: {
         hideMenu: true,
-        title: 'routes.demo.system.account_detail',
+        title: 'routes.demo.system.user_detail',
         ignoreKeepAlive: true,
         showMenu: false,
         currentActiveMenu: '/system/account',

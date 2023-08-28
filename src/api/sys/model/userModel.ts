@@ -10,35 +10,20 @@ export interface LoginParams {
   password: string;
 }
 
-export interface RoleInfo {
-  roleName: string;
-  value: string;
-}
-
-/**
- * @description: Login interface return value
- */
-export interface LoginResultModel {
-  userId: string | number;
-  token: string;
-  role: RoleInfo;
-}
-
-/**
- * @description: Get user information return value
- */
-export interface GetUserInfoModel {
-  roles: RoleInfo[];
-  // 用户id
-  userId: string | number;
-  // 用户名
+export interface UserQuery {
+  pageNum: number;
+  pageSize: number;
+  id: string;
   username: string;
-  // 真实名字
-  realName: string;
-  // 头像
-  avatar: string;
-  // 介绍
-  desc?: string;
+  realname: string;
+  email: string;
+  mobile: string;
+  photo: string;
+  lastIp: string;
+  lastTime: string;
+  status: number;
+  remark: string;
+  systemIds: string[];
 }
 
 export interface UserRoleMenuDtlDTO {
@@ -94,4 +79,9 @@ export interface UserRoleMenuDtlDTO {
   roles: RoleDTO[];
   /** 菜单信息 */
   menus: MenuDtlDTO[];
+}
+
+export interface RoleInfo {
+  roleName: string;
+  value: string;
 }

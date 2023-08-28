@@ -1,5 +1,5 @@
 import { defHttp } from '/@/utils/http/axios';
-import { UserRoleMenuDtlDTO } from './model/userModel';
+import { UserQuery, UserRoleMenuDtlDTO } from './model/userModel';
 import { ContentTypeEnum } from '/@/enums/httpEnum';
 import { LoginRequest, Oauth2AccessToken } from '/@/api/sys/model/loginModel';
 
@@ -9,7 +9,9 @@ enum Api {
   Login = '/oauth/token',
   Logout = '/logout',
   GetUserInfo = '/user/getUserDtl',
-  GetPermCode = '/getPermCode',
+  UserInfo = '/user',
+  DelUserBatch = '/user/removeByIds',
+  UserPage = '/user/page',
   TestRetry = '/testRetry',
 }
 
@@ -29,9 +31,6 @@ export function loginApi(params: LoginRequest, mode: ErrorMessageMode = 'modal')
   );
 }
 
-/**
- * @description: getUserInfo
- */
 export function getUserInfo(params?: any) {
   return defHttp.get<UserRoleMenuDtlDTO>(
     { url: Api.GetUserInfo, params },
@@ -39,8 +38,39 @@ export function getUserInfo(params?: any) {
   );
 }
 
-export function getPermCode() {
-  return defHttp.get<string[]>({ url: Api.GetPermCode });
+export function userPage(params?: UserQuery) {
+  return defHttp.get<UserRoleMenuDtlDTO>(
+    { url: Api.UserPage, params },
+    { errorMessageMode: 'none' },
+  );
+}
+
+export function saveUser(params: any) {
+  return defHttp.post<UserRoleMenuDtlDTO>(
+    { url: Api.UserInfo, params },
+    { errorMessageMode: 'message' },
+  );
+}
+
+export function delUser(params: string) {
+  return defHttp.delete<UserRoleMenuDtlDTO>(
+    { url: Api.UserInfo + '?id=', params },
+    { errorMessageMode: 'message' },
+  );
+}
+
+export function delUserBatch(params: string) {
+  return defHttp.delete<UserRoleMenuDtlDTO>(
+    { url: Api.DelUserBatch + '?ids=', params },
+    { errorMessageMode: 'message' },
+  );
+}
+
+export function modifyUser(params: any) {
+  return defHttp.put<UserRoleMenuDtlDTO>(
+    { url: Api.UserInfo, params },
+    { errorMessageMode: 'message' },
+  );
 }
 
 export function doLogout() {

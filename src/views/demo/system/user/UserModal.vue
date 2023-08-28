@@ -7,11 +7,11 @@
   import { defineComponent, ref, computed, unref } from 'vue';
   import { BasicModal, useModalInner } from '/@/components/Modal';
   import { BasicForm, useForm } from '/@/components/Form/index';
-  import { accountFormSchema } from './account.data';
-  import { getDeptList } from '/@/api/demo/system';
+  import { userFormSchema } from './user.data';
+  // import { getDeptList } from '/@/api/demo/system';
 
   export default defineComponent({
-    name: 'AccountModal',
+    name: 'UserModal',
     components: { BasicModal, BasicForm },
     emits: ['success', 'register'],
     setup(_, { emit }) {
@@ -20,7 +20,8 @@
 
       const [registerForm, { setFieldsValue, updateSchema, resetFields, validate }] = useForm({
         labelWidth: 100,
-        schemas: accountFormSchema,
+        baseColProps: { span: 24 },
+        schemas: userFormSchema,
         showActionButtonGroup: false,
         actionColOptions: {
           span: 23,
@@ -39,10 +40,11 @@
           });
         }
 
-        const treeData = await getDeptList();
+        // const treeData = await getDeptList();
+        const treeData = [];
         updateSchema([
           {
-            field: 'pwd',
+            field: 'password',
             show: !unref(isUpdate),
           },
           {
