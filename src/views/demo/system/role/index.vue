@@ -28,14 +28,11 @@
 </template>
 <script lang="ts">
   import { defineComponent } from 'vue';
-
   import { BasicTable, useTable, TableAction } from '/@/components/Table';
-  import { getRoleListByPage } from '/@/api/demo/system';
-
   import { useDrawer } from '/@/components/Drawer';
   import RoleDrawer from './RoleDrawer.vue';
-
   import { columns, searchFormSchema } from './role.data';
+  import { rolePage } from '/@/api/sys/role';
 
   export default defineComponent({
     name: 'RoleManagement',
@@ -44,7 +41,7 @@
       const [registerDrawer, { openDrawer }] = useDrawer();
       const [registerTable, { reload }] = useTable({
         title: '角色列表',
-        api: getRoleListByPage,
+        api: rolePage,
         columns,
         formConfig: {
           labelWidth: 120,

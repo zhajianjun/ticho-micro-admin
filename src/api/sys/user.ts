@@ -46,31 +46,25 @@ export function userPage(params?: UserQuery) {
 }
 
 export function saveUser(params: any) {
-  return defHttp.post<UserRoleMenuDtlDTO>(
-    { url: Api.UserInfo, params },
-    { errorMessageMode: 'message' },
-  );
+  return defHttp.post<any>({ url: Api.UserInfo, params }, { errorMessageMode: 'message' });
 }
 
 export function delUser(params: string) {
-  return defHttp.delete<UserRoleMenuDtlDTO>(
+  return defHttp.delete<any>(
     { url: Api.UserInfo + '?id=', params },
     { errorMessageMode: 'message' },
   );
 }
 
 export function delUserBatch(params: string) {
-  return defHttp.delete<UserRoleMenuDtlDTO>(
+  return defHttp.delete<any>(
     { url: Api.DelUserBatch + '?ids=', params },
     { errorMessageMode: 'message' },
   );
 }
 
 export function modifyUser(params: any) {
-  return defHttp.put<UserRoleMenuDtlDTO>(
-    { url: Api.UserInfo, params },
-    { errorMessageMode: 'message' },
-  );
+  return defHttp.put<any>({ url: Api.UserInfo, params }, { errorMessageMode: 'message' });
 }
 
 export function doLogout() {

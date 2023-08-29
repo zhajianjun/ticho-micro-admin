@@ -8,7 +8,7 @@
   import { BasicModal, useModalInner } from '/@/components/Modal';
   import { BasicForm, useForm } from '/@/components/Form/index';
   import { userFormSchema } from './user.data';
-  // import { getDeptList } from '/@/api/demo/system';
+  import { saveUser, modifyUser } from '/@/api/sys/user';
 
   export default defineComponent({
     name: 'UserModal',
@@ -60,8 +60,14 @@
         try {
           const values = await validate();
           setModalProps({ confirmLoading: true });
-          // TODO custom api
-          console.log(values);
+          if (unref(isUpdate)) {
+            await modifyUser(values);
+          } else {
+            if (!values.parentId) {
+              values.parentId = 0;
+            }
+            await saveUser(values);
+          }
           closeModal();
           emit('success', { isUpdate: unref(isUpdate), values: { ...values, id: rowId.value } });
         } finally {

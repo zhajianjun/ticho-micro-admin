@@ -12,7 +12,7 @@ export const getMenuList = () => defHttp.get<MenuDtlModule>({ url: Api.MenuList 
 export const getRoutes = () => defHttp.get<MenuDtlModule>({ url: Api.Routes });
 
 export function saveMenu(params: any) {
-  return defHttp.post<MenuDtlModule>({ url: Api.Menu, params }, { errorMessageMode: 'message' });
+  return defHttp.post<any>({ url: Api.Menu, params }, { errorMessageMode: 'message' });
 }
 
 export function delMenu(params: string) {
@@ -20,5 +20,5 @@ export function delMenu(params: string) {
 }
 
 export function modifyMenu(params: any) {
-  return defHttp.put<MenuDtlModule>({ url: Api.Menu, params }, { errorMessageMode: 'message' });
+  return defHttp.put<any>({ url: Api.Menu, params }, { errorMessageMode: 'message' });
 }

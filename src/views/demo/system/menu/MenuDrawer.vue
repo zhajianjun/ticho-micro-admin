@@ -92,19 +92,22 @@
         if (values.type === 3 && values.perms?.length) {
           values.perms = values.perms.map((n) => n.join(':'));
         }
+        let promis: Promise<any>;
         if (unref(isUpdate)) {
-          await modifyMenu(values);
+          promis = modifyMenu(values);
         } else {
           if (!values.parentId) {
             values.parentId = 0;
           }
-          await saveMenu(values);
+          promis = saveMenu(values);
         }
-        closeDrawer();
-        emit('success');
+        promis.then((res) => {
+          console.log(res);
+          closeDrawer();
+          emit('success');
+        });
         setDrawerProps({ confirmLoading: false });
       }
-
       return { registerDrawer, registerForm, getTitle, handleSubmit };
     },
   });

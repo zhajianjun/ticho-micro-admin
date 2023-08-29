@@ -9,16 +9,6 @@ export const columns: BasicColumn[] = [
     width: 120,
   },
   {
-    title: '昵称',
-    dataIndex: 'nickname',
-    width: 120,
-  },
-  {
-    title: '真实姓名',
-    dataIndex: 'realname',
-    width: 120,
-  },
-  {
     title: '手机号',
     dataIndex: 'mobile',
     width: 120,
@@ -27,6 +17,16 @@ export const columns: BasicColumn[] = [
     title: '邮箱',
     dataIndex: 'email',
     width: 120,
+  },
+  {
+    title: '状态',
+    dataIndex: 'status',
+    width: 180,
+  },
+  {
+    title: '租户编号',
+    dataIndex: 'tenantId',
+    width: 180,
   },
   {
     title: '创建时间',
@@ -67,6 +67,18 @@ export const searchFormSchema: FormSchema[] = [
 
 export const userFormSchema: FormSchema[] = [
   {
+    field: `id`,
+    component: 'Input',
+    label: `编号`,
+    show: false,
+  },
+  {
+    field: `tenantId`,
+    component: 'Input',
+    label: `租户编号`,
+    show: false,
+  },
+  {
     field: 'username',
     label: '用户名',
     component: 'Input',
@@ -94,7 +106,7 @@ export const userFormSchema: FormSchema[] = [
     label: '密码',
     component: 'InputPassword',
     required: true,
-    ifShow: false,
+    ifShow: ({ values }) => !values.id,
   },
   // {
   //   label: '角色',
@@ -119,7 +131,7 @@ export const userFormSchema: FormSchema[] = [
       },
       getPopupContainer: () => document.body,
     },
-    required: true,
+    required: false,
   },
   {
     field: 'nickname',

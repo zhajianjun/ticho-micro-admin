@@ -2,24 +2,30 @@ import { BasicColumn } from '/@/components/Table';
 import { FormSchema } from '/@/components/Table';
 import { h } from 'vue';
 import { Switch } from 'ant-design-vue';
-import { setRoleStatus } from '/@/api/demo/system';
 import { useMessage } from '/@/hooks/web/useMessage';
+import { modifyRole } from '/@/api/sys/role';
 
 export const columns: BasicColumn[] = [
   {
-    title: '角色名称',
-    dataIndex: 'roleName',
+    title: '编号',
+    dataIndex: 'id',
+    width: 200,
+    ifShow: false,
+  },
+  {
+    title: '角色编码',
+    dataIndex: 'code',
     width: 200,
   },
   {
-    title: '角色值',
-    dataIndex: 'roleValue',
+    title: '角色名称',
+    dataIndex: 'name',
     width: 180,
   },
   {
-    title: '排序',
-    dataIndex: 'orderNo',
-    width: 50,
+    title: '租户编号',
+    dataIndex: 'tenantId',
+    width: 100,
   },
   {
     title: '状态',
@@ -30,15 +36,16 @@ export const columns: BasicColumn[] = [
         record.pendingStatus = false;
       }
       return h(Switch, {
-        checked: record.status === '1',
+        checked: record.status === 1,
         checkedChildren: '已启用',
         unCheckedChildren: '已禁用',
         loading: record.pendingStatus,
         onChange(checked: boolean) {
           record.pendingStatus = true;
-          const newStatus = checked ? '1' : '0';
+          const newStatus = checked ? 1 : 0;
           const { createMessage } = useMessage();
-          setRoleStatus(record.id, newStatus)
+          const params = { id: record.id, status: newStatus };
+          modifyRole(params)
             .then(() => {
               record.status = newStatus;
               createMessage.success(`已成功修改角色状态`);
@@ -66,7 +73,19 @@ export const columns: BasicColumn[] = [
 
 export const searchFormSchema: FormSchema[] = [
   {
-    field: 'roleNme',
+    field: `id`,
+    component: 'Input',
+    label: `编号`,
+    show: false,
+  },
+  {
+    field: 'code',
+    label: '角色编码',
+    component: 'Input',
+    colProps: { span: 8 },
+  },
+  {
+    field: 'name',
     label: '角色名称',
     component: 'Input',
     colProps: { span: 8 },
@@ -77,8 +96,8 @@ export const searchFormSchema: FormSchema[] = [
     component: 'Select',
     componentProps: {
       options: [
-        { label: '启用', value: '0' },
-        { label: '停用', value: '1' },
+        { label: '启用', value: 1 },
+        { label: '停用', value: 0 },
       ],
     },
     colProps: { span: 8 },
@@ -87,14 +106,20 @@ export const searchFormSchema: FormSchema[] = [
 
 export const formSchema: FormSchema[] = [
   {
-    field: 'roleName',
-    label: '角色名称',
+    field: `id`,
+    component: 'Input',
+    label: `编号`,
+    show: false,
+  },
+  {
+    field: 'code',
+    label: '角色编码',
     required: true,
     component: 'Input',
   },
   {
-    field: 'roleValue',
-    label: '角色值',
+    field: 'name',
+    label: '角色名称',
     required: true,
     component: 'Input',
   },
@@ -105,8 +130,8 @@ export const formSchema: FormSchema[] = [
     defaultValue: '0',
     componentProps: {
       options: [
-        { label: '启用', value: '0' },
-        { label: '停用', value: '1' },
+        { label: '启用', value: 1 },
+        { label: '停用', value: 0 },
       ],
     },
   },
