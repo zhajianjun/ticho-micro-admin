@@ -19,9 +19,9 @@ export interface RouteItem {
 
 export interface MenuDtlDTO {
   /** 菜单id */
-  id: number;
+  id: string;
   /** 父级id */
-  parentId: number;
+  parentId: string;
   /** 类型;1-目录,2-菜单,3-权限 */
   type: number;
   /** 权限标识 */

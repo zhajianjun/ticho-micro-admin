@@ -1,9 +1,16 @@
 import { defHttp } from '/@/utils/http/axios';
-import { RoleDTO } from '/@/api/sys/model/roleModel';
+import {
+  RoleDTO,
+  RoleMenuBindDTO,
+  RoleMenuDtlDTO,
+  RoleMenuQueryDTO,
+} from '/@/api/sys/model/roleModel';
 
 enum Api {
   Role = '/role',
   RolePage = '/role/page',
+  ListRoleMenuByIds = '/role/listRoleMenuByIds',
+  BindMenu = '/role/bindMenu',
 }
 
 export function rolePage(params?: RoleDTO) {
@@ -20,4 +27,15 @@ export function delRole(params: string) {
 
 export function modifyRole(params: any) {
   return defHttp.put<any>({ url: Api.Role, params }, { errorMessageMode: 'message' });
+}
+
+export function listRoleMenuByIds(params?: RoleMenuQueryDTO) {
+  return defHttp.post<RoleMenuDtlDTO>(
+    { url: Api.ListRoleMenuByIds, params },
+    { errorMessageMode: 'message' },
+  );
+}
+
+export function bindMenu(params?: RoleMenuBindDTO) {
+  return defHttp.post<any>({ url: Api.BindMenu, params }, { errorMessageMode: 'message' });
 }

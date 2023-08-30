@@ -13,6 +13,9 @@
           v-model:value="model[field]"
           :treeData="treeData"
           :fieldNames="{ title: 'name', key: 'id' }"
+          :checkedKeys="checkedKeys"
+          @change="check"
+          checkStrictly
           checkable
           toolbar
           title="菜单分配"
@@ -28,7 +31,8 @@
   import { BasicDrawer, useDrawerInner } from '/@/components/Drawer';
   import { BasicTree, TreeItem } from '/@/components/Tree';
 
-  import { getMenuList } from '/@/api/sys/menu';
+  import { bindMenu, listRoleMenuByIds, modifyRole, saveRole } from '/@/api/sys/role';
+  import { RoleMenuQueryDTO } from '/@/api/sys/model/roleModel';
 
   export default defineComponent({
     name: 'RoleDrawer',
@@ -36,6 +40,7 @@
     emits: ['success', 'register'],
     setup(_, { emit }) {
       const isUpdate = ref(true);
+      const checkedKeys = ref<string[]>([]);
       const treeData = ref<TreeItem[]>([]);
 
       const [registerForm, { resetFields, setFieldsValue, validate }] = useForm({
@@ -49,9 +54,10 @@
         resetFields();
         setDrawerProps({ confirmLoading: false });
         // 需要在setFieldsValue之前先填充treeData，否则Tree组件可能会报key not exist警告
-        if (unref(treeData).length === 0) {
-          treeData.value = (await getMenuList()) as any as TreeItem[];
-        }
+        const query = { roleIds: [data.record.id], showAll: true } as unknown as RoleMenuQueryDTO;
+        const { menuIds, menus } = await listRoleMenuByIds(query);
+        treeData.value = menus as any as TreeItem[];
+        checkedKeys.value = menuIds;
         isUpdate.value = !!data?.isUpdate;
 
         if (unref(isUpdate)) {
@@ -67,12 +73,26 @@
         try {
           const values = await validate();
           setDrawerProps({ confirmLoading: true });
-          // TODO custom api
-          console.log(values);
+          if (unref(isUpdate)) {
+            await modifyRole(values);
+          } else {
+            await saveRole(values);
+          }
+          const roleMenuDto = { roleId: values.id, menuIds: checkedKeys.value };
+          await bindMenu(roleMenuDto);
           closeDrawer();
           emit('success');
         } finally {
           setDrawerProps({ confirmLoading: false });
+        }
+      }
+
+      function check(rawVal: any) {
+        console.log(rawVal);
+        if (!!rawVal.checked) {
+          checkedKeys.value = rawVal.checked;
+        } else {
+          checkedKeys.value = rawVal;
         }
       }
 
@@ -82,6 +102,8 @@
         getTitle,
         handleSubmit,
         treeData,
+        checkedKeys,
+        check,
       };
     },
   });

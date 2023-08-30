@@ -28,7 +28,7 @@ export interface UserQuery {
 
 export interface UserRoleMenuDtlDTO {
   /** 用户id */
-  id: number;
+  id: string;
   /** 账户 */
   username: string;
   /** 昵称 */
