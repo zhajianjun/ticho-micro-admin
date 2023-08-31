@@ -25,7 +25,7 @@ import { PageEnum } from '/@/enums/pageEnum';
 
 interface PermissionState {
   // Permission code list
-  permCodeList: string[] | number[];
+  buttons: string[] | number[];
   // Whether the route has been dynamically added 路由是否已动态添加
   isDynamicAddedRoute: boolean;
   // To trigger a menu update
@@ -37,7 +37,7 @@ interface PermissionState {
 export const usePermissionStore = defineStore({
   id: 'app-permission',
   state: (): PermissionState => ({
-    permCodeList: [],
+    buttons: [],
     // Whether the route has been dynamically added
     isDynamicAddedRoute: false,
     // To trigger a menu update
@@ -48,8 +48,8 @@ export const usePermissionStore = defineStore({
     frontMenuList: [],
   }),
   getters: {
-    getPermCodeList(): string[] | number[] {
-      return this.permCodeList;
+    getButtons(): string[] | number[] {
+      return this.buttons;
     },
     getBackMenuList(): Menu[] {
       return this.backMenuList;
@@ -65,8 +65,8 @@ export const usePermissionStore = defineStore({
     },
   },
   actions: {
-    setPermCodeList(codeList: string[]) {
-      this.permCodeList = codeList;
+    setButtons(buttons: string[]) {
+      this.buttons = buttons;
     },
 
     setBackMenuList(list: Menu[]) {
@@ -87,14 +87,14 @@ export const usePermissionStore = defineStore({
     },
     resetState(): void {
       this.isDynamicAddedRoute = false;
-      this.permCodeList = [];
+      this.buttons = [];
       this.backMenuList = [];
       this.lastBuildMenuTime = 0;
     },
     async changePermissionCode() {
       // const codeList = await getPermCode();
       const codeList = [];
-      this.setPermCodeList(codeList);
+      this.setButtons(codeList);
     },
     async buildRoutesAction(): Promise<AppRouteRecordRaw[]> {
       const { t } = useI18n();
@@ -191,8 +191,9 @@ export const usePermissionStore = defineStore({
           }
 
           // Dynamically introduce components
-          routeList = transformObjToRoute(routeList);
-
+          const buttons = [];
+          routeList = transformObjToRoute(routeList, buttons);
+          this.setButtons(buttons);
           //  Background routing to menu structure
           const backMenuList = transformRouteToMenu(routeList);
           this.setBackMenuList(backMenuList);

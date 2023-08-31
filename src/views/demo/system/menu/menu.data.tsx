@@ -1,7 +1,7 @@
 import { BasicColumn } from '/@/components/Table';
 import { FormSchema } from '/@/components/Table';
 import { h, ref } from 'vue';
-import { Tag } from 'ant-design-vue';
+import { Space, Tag } from 'ant-design-vue';
 import { Icon } from '/@/components/Icon';
 import { SHOW_CHILD } from 'ant-design-vue/es/vc-cascader';
 import { getPermList } from '/@/api/sys/perm';
@@ -49,8 +49,18 @@ export const columns: BasicColumn[] = [
     dataIndex: 'perms',
     width: 250,
     customRender: ({ record }) => {
-      const perms = record.perms;
-      return perms?.join(',');
+      if (!record.perms) {
+        return null;
+      }
+      return (
+        <Space>
+          {record.perms.map((item) => (
+            <Tag color={'success'} key={item}>
+              {item}
+            </Tag>
+          ))}
+        </Space>
+      );
     },
   },
   {

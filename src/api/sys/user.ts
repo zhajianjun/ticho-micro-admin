@@ -1,5 +1,5 @@
 import { defHttp } from '/@/utils/http/axios';
-import { UserQuery, UserRoleMenuDtlDTO } from './model/userModel';
+import {UserQuery, UserRoleDTO, UserRoleMenuDtlDTO} from './model/userModel';
 import { ContentTypeEnum } from '/@/enums/httpEnum';
 import { LoginRequest, Oauth2AccessToken } from '/@/api/sys/model/loginModel';
 
@@ -12,6 +12,7 @@ enum Api {
   UserInfo = '/user',
   DelUserBatch = '/user/removeByIds',
   UserPage = '/user/page',
+  BindRole = '/user/bindRole',
   TestRetry = '/testRetry',
 }
 
@@ -65,6 +66,10 @@ export function delUserBatch(params: string) {
 
 export function modifyUser(params: any) {
   return defHttp.put<any>({ url: Api.UserInfo, params }, { errorMessageMode: 'message' });
+}
+
+export function bindRole(params: UserRoleDTO) {
+  return defHttp.post<any>({ url: Api.BindRole, params }, { errorMessageMode: 'message' });
 }
 
 export function doLogout() {

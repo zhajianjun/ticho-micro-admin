@@ -17,7 +17,10 @@ LayoutMap.set('IFRAME', IFRAME);
 let dynamicViewsModules: Record<string, () => Promise<Recordable>>;
 
 // Turn background objects into routing objects 将后端接口数据对象转换为路由对象
-export function transformObjToRoute<T = AppRouteModule>(routeList: AppRouteModule[]): T[] {
+export function transformObjToRoute<T = AppRouteModule>(
+  routeList: AppRouteModule[],
+  buttons: string[],
+): T[] {
   routeList.forEach((route) => {
     const component = route.component as string;
     if (component) {
@@ -37,13 +40,20 @@ export function transformObjToRoute<T = AppRouteModule>(routeList: AppRouteModul
     } else {
       warn('请正确配置路由：' + route?.name + '的component属性');
     }
-    route.children && asyncImportRoute(route.children);
+    pushPerms(route.buttons, buttons);
+    route.children && asyncImportRoute(route.children, buttons);
   });
   return routeList as unknown as T[];
 }
 
+function pushPerms(permsItems: string[] | undefined, buttons: string[]) {
+  if (permsItems && permsItems.length > 0) {
+    buttons.push(...permsItems);
+  }
+}
+
 // Dynamic introduction
-function asyncImportRoute(routes: AppRouteRecordRaw[] | undefined) {
+function asyncImportRoute(routes: AppRouteRecordRaw[] | undefined, buttons: string[]) {
   dynamicViewsModules = dynamicViewsModules || import.meta.glob('../../views/**/*.{vue,tsx}');
   if (!routes) return;
   routes.forEach((item) => {
@@ -62,7 +72,8 @@ function asyncImportRoute(routes: AppRouteRecordRaw[] | undefined) {
     } else if (name) {
       item.component = getParentLayout();
     }
-    children && asyncImportRoute(children);
+    pushPerms(item.buttons, buttons);
+    children && asyncImportRoute(children, buttons);
   });
 }
 

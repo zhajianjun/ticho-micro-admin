@@ -29,6 +29,8 @@ export interface RoleMenuQueryDTO {
   tenantId: string;
   /** 是否显示所有 */
   showAll: boolean;
+  /** 是否树化 */
+  treeHandle: boolean;
 }
 
 export interface RoleMenuDtlDTO {

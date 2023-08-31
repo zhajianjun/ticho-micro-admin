@@ -85,3 +85,8 @@ export interface RoleInfo {
   roleName: string;
   value: string;
 }
+
+export interface UserRoleDTO {
+  userId: string;
+  roleIds: string[];
+}

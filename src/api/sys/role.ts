@@ -9,12 +9,17 @@ import {
 enum Api {
   Role = '/role',
   RolePage = '/role/page',
+  RoleList = '/role/list',
   ListRoleMenuByIds = '/role/listRoleMenuByIds',
   BindMenu = '/role/bindMenu',
 }
 
 export function rolePage(params?: RoleDTO) {
   return defHttp.get<RoleDTO>({ url: Api.RolePage, params }, { errorMessageMode: 'none' });
+}
+
+export function listRoles(params?: RoleDTO) {
+  return defHttp.get<RoleDTO>({ url: Api.RoleList, params }, { errorMessageMode: 'none' });
 }
 
 export function saveRole(params: any) {

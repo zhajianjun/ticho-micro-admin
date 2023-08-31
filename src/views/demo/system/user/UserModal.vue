@@ -4,11 +4,11 @@
   </BasicModal>
 </template>
 <script lang="ts">
-  import { defineComponent, ref, computed, unref } from 'vue';
+  import { computed, defineComponent, ref, unref } from 'vue';
   import { BasicModal, useModalInner } from '/@/components/Modal';
   import { BasicForm, useForm } from '/@/components/Form/index';
   import { userFormSchema } from './user.data';
-  import { saveUser, modifyUser } from '/@/api/sys/user';
+  import { modifyUser, saveUser, bindRole } from '/@/api/sys/user';
 
   export default defineComponent({
     name: 'UserModal',
@@ -17,7 +17,7 @@
     setup(_, { emit }) {
       const isUpdate = ref(true);
       const rowId = ref('');
-
+      const checkedRoleKeys = ref<string[]>([]);
       const [registerForm, { setFieldsValue, updateSchema, resetFields, validate }] = useForm({
         labelWidth: 100,
         baseColProps: { span: 24 },
@@ -32,14 +32,12 @@
         resetFields();
         setModalProps({ confirmLoading: false });
         isUpdate.value = !!data?.isUpdate;
-
         if (unref(isUpdate)) {
           rowId.value = data.record.id;
           setFieldsValue({
             ...data.record,
           });
         }
-
         // const treeData = await getDeptList();
         const treeData = [];
         updateSchema([
@@ -68,6 +66,8 @@
             }
             await saveUser(values);
           }
+          const userRoleDTO = { userId: values.id, roleIds: values.roleIds };
+          await bindRole(userRoleDTO);
           closeModal();
           emit('success', { isUpdate: unref(isUpdate), values: { ...values, id: rowId.value } });
         } finally {
@@ -75,7 +75,7 @@
         }
       }
 
-      return { registerModal, registerForm, getTitle, handleSubmit };
+      return { registerModal, registerForm, getTitle, handleSubmit, checkedRoleKeys };
     },
   });
 </script>

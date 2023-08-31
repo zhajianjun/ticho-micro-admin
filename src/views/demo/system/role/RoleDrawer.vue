@@ -54,7 +54,11 @@
         resetFields();
         setDrawerProps({ confirmLoading: false });
         // 需要在setFieldsValue之前先填充treeData，否则Tree组件可能会报key not exist警告
-        const query = { roleIds: [data.record.id], showAll: true } as unknown as RoleMenuQueryDTO;
+        const query = {
+          roleIds: [data.record.id],
+          showAll: true,
+          treeHandle: true,
+        } as unknown as RoleMenuQueryDTO;
         const { menuIds, menus } = await listRoleMenuByIds(query);
         treeData.value = menus as any as TreeItem[];
         checkedKeys.value = menuIds;

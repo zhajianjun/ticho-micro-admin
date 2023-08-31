@@ -1,7 +1,10 @@
 // import { getAllRoleList, isAccountExist } from '/@/api/demo/system';
 import { BasicColumn } from '/@/components/Table';
 import { FormSchema } from '/@/components/Table';
+import { listRoles } from '/@/api/sys/role';
+import { Space, Tag } from 'ant-design-vue';
 
+// @ts-ignore
 export const columns: BasicColumn[] = [
   {
     title: '用户名',
@@ -35,8 +38,17 @@ export const columns: BasicColumn[] = [
   },
   {
     title: '角色',
-    dataIndex: 'role',
+    dataIndex: 'roles',
     width: 200,
+    customRender: ({ record }) => (
+      <Space>
+        {record.roles.map((item) => (
+          <Tag color={'success'} key={item}>
+            {item.name}
+          </Tag>
+        ))}
+      </Space>
+    ),
   },
   {
     title: '备注',
@@ -108,17 +120,18 @@ export const userFormSchema: FormSchema[] = [
     required: true,
     ifShow: ({ values }) => !values.id,
   },
-  // {
-  //   label: '角色',
-  //   field: 'role',
-  //   component: 'ApiSelect',
-  //   componentProps: {
-  //     api: getAllRoleList,
-  //     labelField: 'roleName',
-  //     valueField: 'roleValue',
-  //   },
-  //   required: true,
-  // },
+  {
+    label: '角色',
+    field: 'roleIds',
+    component: 'ApiSelect',
+    componentProps: {
+      api: listRoles,
+      mode: 'multiple',
+      labelField: 'name',
+      valueField: 'id',
+    },
+    required: true,
+  },
   {
     field: 'dept',
     label: '所属部门',
