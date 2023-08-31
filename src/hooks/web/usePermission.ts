@@ -7,7 +7,6 @@ import { useUserStore } from '/@/store/modules/user';
 import { useTabs } from './useTabs';
 
 import { router, resetRouter } from '/@/router';
-// import { RootRoute } from '/@/router/routes';
 
 import projectSetting from '/@/settings/projectSetting';
 import { PermissionModeEnum } from '/@/enums/appEnum';
@@ -60,6 +59,16 @@ export function usePermission() {
     // Visible by default
     if (!value) {
       return def;
+    }
+    const userInfo = userStore.getUserInfo;
+    // 超級管理员角色，什么都有
+    if (
+      !!userInfo.roleCodes &&
+      !!userInfo.tenantId &&
+      userInfo.roleCodes.includes('admin') &&
+      userInfo.tenantId === '000000'
+    ) {
+      return true;
     }
     const allCodeList = permissionStore.getButtons as string[];
     if (!isArray(value)) {

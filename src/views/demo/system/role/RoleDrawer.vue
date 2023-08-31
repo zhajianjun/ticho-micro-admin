@@ -31,7 +31,7 @@
   import { BasicDrawer, useDrawerInner } from '/@/components/Drawer';
   import { BasicTree, TreeItem } from '/@/components/Tree';
 
-  import { bindMenu, listRoleMenuByIds, modifyRole, saveRole } from '/@/api/sys/role';
+  import { listRoleMenuByIds, modifyRole, saveRole } from '/@/api/sys/role';
   import { RoleMenuQueryDTO } from '/@/api/sys/model/roleModel';
 
   export default defineComponent({
@@ -53,6 +53,7 @@
       const [registerDrawer, { setDrawerProps, closeDrawer }] = useDrawerInner(async (data) => {
         resetFields();
         setDrawerProps({ confirmLoading: false });
+        isUpdate.value = !!data?.isUpdate;
         // 需要在setFieldsValue之前先填充treeData，否则Tree组件可能会报key not exist警告
         const query = {
           roleIds: [data.record.id],
@@ -62,7 +63,6 @@
         const { menuIds, menus } = await listRoleMenuByIds(query);
         treeData.value = menus as any as TreeItem[];
         checkedKeys.value = menuIds;
-        isUpdate.value = !!data?.isUpdate;
 
         if (unref(isUpdate)) {
           setFieldsValue({
@@ -77,13 +77,12 @@
         try {
           const values = await validate();
           setDrawerProps({ confirmLoading: true });
+          values.menuIds = checkedKeys.value;
           if (unref(isUpdate)) {
             await modifyRole(values);
           } else {
             await saveRole(values);
           }
-          const roleMenuDto = { roleId: values.id, menuIds: checkedKeys.value };
-          await bindMenu(roleMenuDto);
           closeDrawer();
           emit('success');
         } finally {

@@ -1,7 +1,7 @@
 import { BasicColumn } from '/@/components/Table';
 import { FormSchema } from '/@/components/Table';
 import { h, ref } from 'vue';
-import { Space, Tag } from 'ant-design-vue';
+import { Tag } from 'ant-design-vue';
 import { Icon } from '/@/components/Icon';
 import { SHOW_CHILD } from 'ant-design-vue/es/vc-cascader';
 import { getPermList } from '/@/api/sys/perm';
@@ -53,13 +53,13 @@ export const columns: BasicColumn[] = [
         return null;
       }
       return (
-        <Space>
+        <span>
           {record.perms.map((item) => (
             <Tag color={'success'} key={item}>
               {item}
             </Tag>
           ))}
-        </Space>
+        </span>
       );
     },
   },

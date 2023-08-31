@@ -32,7 +32,7 @@
   import { useDrawer } from '/@/components/Drawer';
   import RoleDrawer from './RoleDrawer.vue';
   import { columns, searchFormSchema } from './role.data';
-  import { rolePage } from '/@/api/sys/role';
+  import { rolePage, delRole } from '/@/api/sys/role';
 
   export default defineComponent({
     name: 'RoleManagement',
@@ -74,7 +74,9 @@
       }
 
       function handleDelete(record: Recordable) {
-        console.log(record);
+        delRole(record.id).then(() => {
+          reload();
+        });
       }
 
       function handleSuccess() {

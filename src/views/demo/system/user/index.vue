@@ -95,7 +95,7 @@
       }
 
       function handleDelete(record: Recordable) {
-         delUser(record.id);
+        delUser(record.id);
       }
 
       function handleSuccess({ isUpdate, values }) {
