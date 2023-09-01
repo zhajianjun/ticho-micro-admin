@@ -2,7 +2,9 @@
   <div>
     <BasicTable @register="registerTable" @fetch-success="onFetchSuccess">
       <template #toolbar>
-        <a-button type="primary" @click="handleCreate"> 新增菜单 </a-button>
+        <a-button type="primary" v-auth="'MenuAdd'" @click="handleCreate">新增</a-button>
+        <a-button type="primary" v-if="showSelect" @click="expandAll">展开</a-button>
+        <a-button type="primary" v-if="showSelect" @click="collapseAll">收缩</a-button>
       </template>
       <template #action="{ record }">
         <TableAction
@@ -11,15 +13,18 @@
               icon: 'ant-design:file-add-outlined',
               type: 'link',
               color: 'warning',
+              ifShow: hasPermission('MenuAdd'),
               onClick: handleCreate.bind(null, record),
             },
             {
               icon: 'clarity:note-edit-line',
+              ifShow: hasPermission('MenuModify'),
               onClick: handleEdit.bind(null, record),
             },
             {
               icon: 'ant-design:delete-outlined',
               color: 'error',
+              ifShow: hasPermission('MenuDel'),
               popConfirm: {
                 title: '是否确认删除',
                 confirm: handleDelete.bind(null, record),
@@ -33,7 +38,7 @@
   </div>
 </template>
 <script lang="ts">
-  import { defineComponent, nextTick, ref } from 'vue';
+  import { defineComponent, ref } from 'vue';
 
   import { BasicTable, TableAction, useTable } from '/@/components/Table';
   import { delMenu, getMenuList } from '/@/api/sys/menu';
@@ -43,14 +48,17 @@
 
   import { columns } from './menu.data';
   import { cloneDeep } from 'lodash-es';
+  import { usePermission } from '/@/hooks/web/usePermission';
 
   export default defineComponent({
     name: 'MenuManagement',
     components: { BasicTable, MenuDrawer, TableAction },
     setup() {
+      const { hasPermission } = usePermission();
       const treeData = ref([]);
       const [registerDrawer, { openDrawer }] = useDrawer();
-      const [registerTable, { reload, expandAll }] = useTable({
+      let showSelect = hasPermission('MenuSelect');
+      const [registerTable, { reload, expandAll, collapseAll }] = useTable({
         title: '菜单列表',
         api: async () => {
           const res = await getMenuList();
@@ -60,14 +68,19 @@
           };
         },
         columns,
+        useSearchForm: showSelect,
         formConfig: {
           showActionButtonGroup: false,
+          // showSubmitButton: showSelect,
+          // showResetButton: showSelect,
+        },
+        tableSetting: {
+          redo: showSelect,
         },
         isTreeTable: true,
-        immediate: true,
+        immediate: showSelect,
         pagination: false,
         striped: true,
-        useSearchForm: true,
         showTableSetting: true,
         canColDrag: true,
         bordered: true,
@@ -113,7 +126,7 @@
       }
 
       function onFetchSuccess() {
-        nextTick(expandAll);
+        // nextTick(expandAll);
       }
 
       return {
@@ -125,6 +138,11 @@
         handleDelete,
         handleSuccess,
         onFetchSuccess,
+        reload,
+        hasPermission,
+        showSelect,
+        expandAll,
+        collapseAll
       };
     },
   });

@@ -3,7 +3,7 @@ import { FormSchema } from '/@/components/Table';
 import { h } from 'vue';
 import { Switch } from 'ant-design-vue';
 import { useMessage } from '/@/hooks/web/useMessage';
-import { modifyRole } from '/@/api/sys/role';
+import { modifyRoleStatus } from '/@/api/sys/role';
 
 export const columns: BasicColumn[] = [
   {
@@ -45,7 +45,7 @@ export const columns: BasicColumn[] = [
           const newStatus = checked ? 1 : 0;
           const { createMessage } = useMessage();
           const params = { id: record.id, status: newStatus };
-          modifyRole(params)
+          modifyRoleStatus(params)
             .then(() => {
               record.status = newStatus;
               createMessage.success(`已成功修改角色状态`);

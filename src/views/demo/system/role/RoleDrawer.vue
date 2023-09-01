@@ -81,6 +81,7 @@
           if (unref(isUpdate)) {
             await modifyRole(values);
           } else {
+            values.tenantId = '000000';
             await saveRole(values);
           }
           closeDrawer();

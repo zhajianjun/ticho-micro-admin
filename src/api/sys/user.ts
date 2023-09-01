@@ -1,5 +1,5 @@
 import { defHttp } from '/@/utils/http/axios';
-import {UserQuery, UserRoleDTO, UserRoleMenuDtlDTO} from './model/userModel';
+import { UserQuery, UserRoleDTO, UserRoleMenuDtlDTO} from './model/userModel';
 import { ContentTypeEnum } from '/@/enums/httpEnum';
 import { LoginRequest, Oauth2AccessToken } from '/@/api/sys/model/loginModel';
 

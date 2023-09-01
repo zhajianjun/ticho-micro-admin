@@ -2,7 +2,7 @@
 import { BasicColumn } from '/@/components/Table';
 import { FormSchema } from '/@/components/Table';
 import { listRoles } from '/@/api/sys/role';
-import { Space, Tag } from 'ant-design-vue';
+import { Tag } from 'ant-design-vue';
 
 // @ts-ignore
 export const columns: BasicColumn[] = [
@@ -40,15 +40,13 @@ export const columns: BasicColumn[] = [
     title: '角色',
     dataIndex: 'roles',
     width: 200,
-    customRender: ({ record }) => (
-      <Space>
-        {record.roles.map((item) => (
-          <Tag color={'success'} key={item}>
-            {item.name}
-          </Tag>
-        ))}
-      </Space>
-    ),
+    customRender: ({ record }) => {
+      return record.roles.map((item) => (
+        <Tag color={'success'} key={item}>
+          {item.name}
+        </Tag>
+      ));
+    },
   },
   {
     title: '备注',

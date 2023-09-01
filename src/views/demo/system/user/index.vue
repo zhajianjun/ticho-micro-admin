@@ -3,7 +3,7 @@
     <DeptTree class="w-1/4 xl:w-1/5" @select="handleSelect" />
     <BasicTable @register="registerTable" class="w-3/4 xl:w-4/5" :searchInfo="searchInfo">
       <template #toolbar>
-        <a-button type="primary" @click="handleCreate">新增账号</a-button>
+        <a-button type="primary" v-auth="'UserAdd'" @click="handleCreate">新增账号</a-button>
       </template>
       <template #action="{ record }">
         <TableAction
@@ -11,19 +11,22 @@
             {
               icon: 'clarity:info-standard-line',
               tooltip: '查看用户详情',
+              ifShow: hasPermission('UserSelect'),
               onClick: handleView.bind(null, record),
             },
             {
               icon: 'clarity:note-edit-line',
               tooltip: '编辑用户资料',
+              ifShow: hasPermission('UserEdit'),
               onClick: handleEdit.bind(null, record),
             },
             {
               icon: 'ant-design:delete-outlined',
               color: 'error',
-              tooltip: '删除此账号',
+              ifShow: hasPermission('UserDel'),
+              tooltip: '注销此账号',
               popConfirm: {
-                title: '是否确认删除',
+                title: '是否确认注销',
                 confirm: handleDelete.bind(null, record),
               },
             },
@@ -45,11 +48,14 @@
   import { columns, searchFormSchema } from './user.data';
   import { useGo } from '/@/hooks/web/usePage';
   import { delUser } from '/@/api/sys/user';
+  import { usePermission } from '/@/hooks/web/usePermission';
 
   export default defineComponent({
     name: 'AccountManagement',
     components: { BasicTable, PageWrapper, DeptTree, UserModel, TableAction },
     setup() {
+      const { hasPermission } = usePermission();
+      let showSelect = hasPermission('UserSelect');
       const go = useGo();
       const [registerModal, { openModal }] = useModal();
       const searchInfo = reactive<Recordable>({});
@@ -58,11 +64,19 @@
         api: userPage,
         rowKey: 'id',
         columns,
+        useSearchForm: showSelect,
         formConfig: {
           labelWidth: 120,
           schemas: searchFormSchema,
           autoSubmitOnEnter: true,
+          showActionButtonGroup: showSelect,
+          showSubmitButton: showSelect,
+          showResetButton: showSelect,
         },
+        tableSetting: {
+          redo: showSelect,
+        },
+        immediate: showSelect,
         useSearchForm: true,
         showTableSetting: true,
         canResize: true,
@@ -95,7 +109,9 @@
       }
 
       function handleDelete(record: Recordable) {
-        delUser(record.id);
+        delUser(record.id).catch(() => {
+          reload();
+        });
       }
 
       function handleSuccess({ isUpdate, values }) {
@@ -130,6 +146,7 @@
         handleSelect,
         handleView,
         searchInfo,
+        hasPermission,
       };
     },
   });

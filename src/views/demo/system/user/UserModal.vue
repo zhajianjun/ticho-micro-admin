@@ -1,5 +1,11 @@
 <template>
-  <BasicModal v-bind="$attrs" @register="registerModal" :title="getTitle" @ok="handleSubmit">
+  <BasicModal
+    v-bind="$attrs"
+    @register="registerModal"
+    :title="getTitle"
+    :maskClosable="false"
+    @ok="handleSubmit"
+  >
     <BasicForm @register="registerForm" />
   </BasicModal>
 </template>
@@ -8,7 +14,7 @@
   import { BasicModal, useModalInner } from '/@/components/Modal';
   import { BasicForm, useForm } from '/@/components/Form/index';
   import { userFormSchema } from './user.data';
-  import { modifyUser, saveUser, bindRole } from '/@/api/sys/user';
+  import { modifyUser, saveUser } from '/@/api/sys/user';
 
   export default defineComponent({
     name: 'UserModal',
@@ -64,10 +70,9 @@
             if (!values.parentId) {
               values.parentId = 0;
             }
+            values.tenantId = '000000';
             await saveUser(values);
           }
-          const userRoleDTO = { userId: values.id, roleIds: values.roleIds };
-          await bindRole(userRoleDTO);
           closeModal();
           emit('success', { isUpdate: unref(isUpdate), values: { ...values, id: rowId.value } });
         } finally {

@@ -51,14 +51,23 @@
           let parentId = data.record.id;
           let parentType = data.record.type;
           let type = parentType === 2 ? 3 : 1;
+          let componentName = null;
+          let name = null;
+          let sort = null;
           if (parentType === 3) {
             parentId = data.record.parentId;
             type = 3;
+            name = data.record.name;
+            componentName = data.record.componentName;
+            sort = data.record.sort;
           }
           // 创建菜单设置类型默认值
           await setFieldsValue({
             parentId: parentId,
             type: type,
+            name: name,
+            componentName: componentName,
+            sort: sort,
           });
         }
         // 过滤按钮类型的菜单
@@ -101,12 +110,14 @@
           }
           promis = saveMenu(values);
         }
-        promis.then((res) => {
-          console.log(res);
-          closeDrawer();
-          emit('success');
-        });
-        setDrawerProps({ confirmLoading: false });
+        promis
+          .then(() => {
+            closeDrawer();
+            emit('success');
+          })
+          .finally(() => {
+            setDrawerProps({ confirmLoading: false });
+          });
       }
       return { registerDrawer, registerForm, getTitle, handleSubmit };
     },
