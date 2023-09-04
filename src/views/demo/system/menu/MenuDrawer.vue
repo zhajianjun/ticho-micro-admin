@@ -101,6 +101,10 @@
         if (values.type === 3 && values.perms?.length) {
           values.perms = values.perms.map((n) => n.join(':'));
         }
+        if (values.type === 1) {
+          values.component = 'LAYOUT';
+          values.componentName = 'LAYOUT';
+        }
         let promis: Promise<any>;
         if (unref(isUpdate)) {
           promis = modifyMenu(values);

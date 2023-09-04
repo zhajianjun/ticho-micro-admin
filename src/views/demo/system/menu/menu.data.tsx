@@ -178,7 +178,13 @@ export const formSchema: FormSchema[] = [
     label: '组件名称',
     component: 'Input',
     required: true,
-    ifShow: ({ values }) => !isDir(values.type),
+    ifShow: ({ values }) => !isDir(values.type) && values.extFlag !== 1,
+  },
+  {
+    field: 'redirect',
+    label: '转发地址',
+    component: 'Input',
+    ifShow: ({ values }) => !isButton(values.type),
   },
   {
     field: 'perms',

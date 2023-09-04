@@ -209,6 +209,7 @@ export const usePermissionStore = defineStore({
 
       routes.push(ERROR_LOG_ROUTE);
       patchHomeAffix(routes);
+      console.log(routes);
       return routes;
     },
   },

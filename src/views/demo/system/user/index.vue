@@ -77,7 +77,6 @@
           redo: showSelect,
         },
         immediate: showSelect,
-        useSearchForm: true,
         showTableSetting: true,
         canResize: true,
         showIndexColumn: false,
@@ -133,7 +132,7 @@
       }
 
       function handleView(record: Recordable) {
-        go('/system/user_detail/' + record.id);
+        go('/system/user/userDetail/' + record.username);
       }
 
       return {
